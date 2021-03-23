@@ -39,7 +39,7 @@ test_job:
 
 deploy_container:
   stage: container
-  image: docker:latest
+  image: docker:stable
   services:
     - docker:dind
   script:
