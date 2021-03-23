@@ -1,4 +1,5 @@
 FROM python:alpine
-COPY /src/app.py /tmp/app.py
+WORKDIR /src/
+COPY app.py /tmp
 ENTRYPOINT ["python3"]
 CMD ["app.py"]
