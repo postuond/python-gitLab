@@ -1,7 +1,7 @@
 image: python:latest
 
 before_script:
-  - python -V # Print out python version for debugging
+        #  - python -V # Print out python version for debugging
 
 variables:
   TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
