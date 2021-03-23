@@ -23,7 +23,7 @@ deploy_job:
   image: python:3.7-alpine
   script:
     - chmod og= $ID_RSA
-    - apk 
+    - apk add python3 
     - apk update && apk add openssh-client
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull $TAG_COMMIT"
