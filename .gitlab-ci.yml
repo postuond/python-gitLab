@@ -45,7 +45,7 @@ deploy_job:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull $TAG_COMMIT"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container rm -f python-gitlab || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -p 9990:8089 -d --name python-gitlab $TAG_COMMIT"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker exec -it $TAG_COMMIT cat /tmp/app.py | tail -n 1 | cut -c 8-14"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker exec -it python-gitlab cat /tmp/app.py | tail -n 1 | cut -c 8-14"
   environment:
     name: production
     url: http://192.168.88.132
