@@ -10,6 +10,7 @@ variables:
 
 stages:
   - test
+  - container
   - deploy
 
 test_job:
@@ -17,20 +18,28 @@ test_job:
   script:
     - echo "Running tests"
     - python -m unittest discover -s "./tests/"
-
+deploy_container:
+  stage: container
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t $TAG_COMMIT -t $TAG_LATEST .
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker push $TAG_COMMIT
+    - docker push $TAG_LATEST
 deploy_job:
   stage: deploy
   image: python:3.7-alpine
   script:
     - chmod og= $ID_RSA
-    - apk add python3 
     - apk update && apk add openssh-client
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull $TAG_COMMIT"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container rm -f my-app || true"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 80:80 --name my-app $TAG_COMMIT"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container rm -f gitlab-python || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 80:80 --name gitlab-python $TAG_COMMIT"
     - echo "the project directory is - $CI_PROJECT_DIR"
-    - python3 app.py
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker exec -it gitlab-python python3 app.py"
   environment:
     name: production
     url: http://192.168.88.132
