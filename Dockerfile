@@ -1,3 +1,3 @@
 FROM python:alpine
 ADD /src/app.py /
-CMD ["python3", "./app.py"]
+CMD ["while true;", "do sleep 10;", "done"]
