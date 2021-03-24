@@ -46,6 +46,9 @@ deploy_job:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container rm -f python-gitlab || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container run -d --name python-gitlab $TAG_COMMIT"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker exec python-gitlab python3 /app.py"
+  release:
+    tag_name: v1.0.0
+    description: 'App release v1.0.0'
   environment:
     name: production
     url: http://192.168.88.132
