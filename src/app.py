@@ -15,4 +15,4 @@ def multiply(*args: Union[int, float]):
 
     return total
 
-print("Verze 1")
+print("Verze 2")
